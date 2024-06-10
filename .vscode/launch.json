@@ -1,0 +1,83 @@
+{
+    // Use o IntelliSense para saber mais sobre os atributos possíveis.
+    // Focalizar para exibir as descrições dos atributos existentes.
+    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'kex_app'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=kex_app",
+                    "--package=kex_app"
+                ],
+                "filter": {
+                    "name": "kex_app",
+                    "kind": "bin"
+                }
+            },
+            "args": ["\\Device\\NPF_{6C21106D-6B9C-40A5-9800-96CABC3B935D}","abcd&¨*()09876"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'kex_app'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=kex_app",
+                    "--package=kex_app"
+                ],
+                "filter": {
+                    "name": "kex_app",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'kex_domain'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=kex_domain"
+                ],
+                "filter": {
+                    "name": "kex_domain",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'kex_infra'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=kex_infra"
+                ],
+                "filter": {
+                    "name": "kex_infra",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

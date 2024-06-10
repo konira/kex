@@ -1,0 +1,3 @@
+[workspace]
+members = [ "kex_app", "kex_bootstrap","kex_domain","kex_infra"]
+default-members = ["kex_app"]
