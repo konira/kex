@@ -3,7 +3,7 @@ konira exfiltration
 
 # Projeto de Exfiltração de Dados
 
-Este projeto é uma implementação de um sistema de exfiltração de dados. Ele utiliza o protocolo ICMP para a transmissão de dados e o padrão Observable (EventEmitter) para a gestão de eventos.
+Este projeto é uma implementação de um sistema de exfiltração de dados e commands. Ele utiliza o protocolo ICMP para a transmissão de dados e o padrão Observable (EventEmitter) para a gestão de eventos.
 
 ## Dependências
 
