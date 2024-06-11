@@ -13,9 +13,22 @@ O projeto depende dos seguintes pacotes:
 
 - `pnet`: Uma biblioteca de baixo nível para a manipulação de pacotes de rede. A versão utilizada é a 0.35.
 
+- `Packet.lib` : Lib c++.  A versão utilizada é a 4.1.2
+
+- `wpcap.lib`: Lib c++. A versão utilizada é a 4.1.2
 ## Como usar
 
 Para usar este projeto, você precisará instalar as dependências listadas acima. Uma vez instaladas, você pode executar o projeto a partir da linha de comando.
+passando a "interface net" e uma assinatura de 14 bytes para que o pacote icmp seja reconhecido como um comando ex:
+
+ ```powershell
+    kex_app "\Device\NPF_{6C21106D-6B9C-40A5-9800-96CABC3B935D}" "abcd&¨*()09876"
+ ```
+
+
+## Proximos passos
+
+- exportação geração de DLL para injecção.
 
 ## Contribuindo
 
