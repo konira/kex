@@ -1,13 +1,9 @@
 use std::sync::Arc;
 use std::os::raw::{c_char, c_uchar, c_int};
-use kex_domain::Entitys::Envent::EventEmitter;
-use kex_domain::Entitys::Payload::Payload;
-
-
-
+pub use kex_domain::Entitys::Envent::EventEmitter;
+pub use kex_domain::Entitys::Payload::Payload;
 pub use kex_infra::dto;
-pub use kex_domain;
-pub use kex_infra;
+pub use kex_infra::hex;
 use kex_infra::dto::server_options::ServerOptions;
 pub enum Method {
     Echo = 0,

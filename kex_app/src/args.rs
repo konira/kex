@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{ builder::Str, Args, Parser, Subcommand};
 
 
 #[derive(Debug,Parser)]
@@ -12,7 +12,7 @@ pub struct Cli {
 #[derive(Debug,Subcommand)]
 pub enum Commands {
     /// send data to server
-    Client(ArgsKexRequest),
+    Client(ArgsKexClient),
     /// monitor data from client
     Server(ArgsKexServer),
     /// list all interfaces
@@ -20,31 +20,29 @@ pub enum Commands {
 }
 
 #[derive(Debug,Args)]
-pub struct ArgsKexRequest {
+pub struct ArgsKexClient {
 
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "abcdefghijklkj")]
     pub sig: String,
     #[arg(short, long)]
-    pub method: u8,
-    #[arg(short, long)]
     pub payload: Option<String>,
-    #[arg(short, long)]
-    pub chunk_size: u8,
+    #[arg(short, long, default_value = "64")]
+    pub chunk_size: String,
     #[arg(short, long)]
     pub addr: String,
-    #[arg(short, long)]
-    pub interface_name: Option<String>,
-
+    #[arg(short, long, default_value = "0")]
+    pub tp: String,
+    #[arg(short, long, default_value = "0")]
+    pub method: String,
 }
 
 #[derive(Debug,Args)]
 pub struct ArgsKexServer {
 
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "abcdefghijklkj")]
     pub sig: String,
     #[arg(short, long)]
-    pub interface_name: String,
-}
-fn parse_hex(hex_str: &str) -> Result<Vec<u8>, kex_bootstrap::kex_infra::hex::FromHexError> {
-    kex_bootstrap::kex_infra::hex::decode(hex_str)
+    pub interface_name: String,    
+    #[arg(short, long, default_value = "0")]
+    pub tp: String,
 }
