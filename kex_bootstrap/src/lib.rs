@@ -105,9 +105,7 @@ pub extern "C" fn injlistifaces() {
 mod tests {
     use super::*;
     use std::net::Ipv4Addr;
-    use std::sync::Arc;
-    use kex_domain::Entitys::Envent::EventEmitter;
-    use kex_infra::dto::client_options::ClientOptions;
+
     #[test]
     fn test_echo() {
         let data = vec![1, 2, 3, 4, 5];
