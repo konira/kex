@@ -107,7 +107,6 @@ mod tests {
     use std::net::Ipv4Addr;
     use std::sync::Arc;
     use kex_domain::Entitys::Envent::EventEmitter;
-    use kex_infra::dto::server_optionss::ServerOptions;
     use kex_infra::dto::client_options::ClientOptions;
     #[test]
     fn test_echo() {
