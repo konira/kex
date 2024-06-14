@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 kex_bootstrap = { path = "../kex_bootstrap" }
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1", features = ["rt"] }
 clap = { version = "4.5.7", features = ["derive"] }

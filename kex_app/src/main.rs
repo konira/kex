@@ -27,11 +27,12 @@ fn main() -> io::Result<()>{
             };
             kex_bootstrap::request(options)
         }
+        
         args::Commands::Server(server) => {            
             let options = kex_bootstrap::dto::ServerOptions::ServerOptions{
                 interface_name: server.interface_name,
                 sig: server.sig.into_bytes(),
-                tp: 0,                
+                tp: TpEnum::Request as u8,                
             };
             kex_bootstrap::init(options)
         }

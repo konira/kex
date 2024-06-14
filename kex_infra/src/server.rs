@@ -5,8 +5,8 @@ use kex_domain::Enums::tp_enum::TpEnum;
 use pnet::datalink::Channel::Ethernet;
 use pnet::datalink::{self, NetworkInterface};
 use pnet::packet::ethernet::EthernetPacket;
-use pnet::packet::icmp::{self, IcmpCode, IcmpPacket};
 use pnet::packet::icmp::IcmpTypes;
+use pnet::packet::icmp::{self, IcmpCode, IcmpPacket};
 use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::Packet;
 use pnet::transport::{self, TransportChannelType::Layer4, TransportProtocol::Ipv4};
@@ -66,13 +66,12 @@ pub fn server(args: ServerOptions, event: Arc<EventEmitter>) {
 
                             let data_clone = Arc::clone(&shared_data);
                             let mut data = data_clone.lock().unwrap();
-
+                                                        
                             if data.len() == data[0].total as usize {
                                 let mut payload = vec![];
                                 for i in 0..data.len() {
                                     payload.extend_from_slice(&data[i].payload);
-                                }
-                                write(Path::new("output"), &payload).expect("Unable to write file");
+                                }                                
                                 event.emit(&data[0].method, payload, ip_packet.get_source());
                                 data.clear();
                             }
@@ -87,17 +86,20 @@ pub fn server(args: ServerOptions, event: Arc<EventEmitter>) {
     }
 }
 pub fn response(dst_ip: [u8; 4], payload: &Payload, chunk_size: usize) {
-    let protocol = Layer4(transport::TransportProtocol::Ipv4(pnet::packet::ip::IpNextHeaderProtocols::Icmp));
+    let protocol = Layer4(transport::TransportProtocol::Ipv4(
+        pnet::packet::ip::IpNextHeaderProtocols::Icmp,
+    ));
     let destination_addr = Ipv4Addr::new(dst_ip[0], dst_ip[1], dst_ip[2], dst_ip[3]).into();
-    let (mut tx, _) = transport::transport_channel(4096,protocol )
-        .expect("Error creating transport channel");
+    let (mut tx, _) =
+        transport::transport_channel(4096, protocol).expect("Error creating transport channel");
     let chunks = payload.chunk(chunk_size);
     let mut sequenc = 1;
     for chunk in chunks {
         let chunk_bytes = chunk.to_bytes();
         let mut buffer = vec![0u8; chunk_bytes.len() + 32];
-        
-        let mut packet = pnet::packet::icmp::echo_request::MutableEchoRequestPacket::new(&mut buffer).unwrap();                      
+
+        let mut packet =
+            pnet::packet::icmp::echo_request::MutableEchoRequestPacket::new(&mut buffer).unwrap();
         packet.set_icmp_type(IcmpTypes::EchoRequest);
         packet.set_icmp_code(IcmpCode::new(0));
         packet.set_sequence_number(sequenc);
@@ -109,10 +111,10 @@ pub fn response(dst_ip: [u8; 4], payload: &Payload, chunk_size: usize) {
         let r = tx.send_to(packet, destination_addr);
         if r.is_err() {
             println!("Error on send_to: {:?}", r.err());
-        }else {
+        } else {
             sequenc += 1;
         }
-        let ten_millis = std::time::Duration::from_millis(20);        
+        let ten_millis = std::time::Duration::from_millis(20);
         std::thread::sleep(ten_millis);
     }
 }
@@ -135,7 +137,7 @@ mod tests {
         iface_list();
     }
     #[test]
-    fn test_response() {      
+    fn test_response() {
         let value = r#"        
 Inspiração dos meus sonhos, não quero acordar
 Quero ficar só contigo, não vou poder voar
@@ -166,9 +168,11 @@ Pense em mim, que eu tô pensando em você
 E me diz o que eu quero te dizer
 Vem pra cá, pra ver que juntos estamos
 E te falar mais uma vez que te amo
-        "#.as_bytes().to_vec(); 
-        let sig = "abcdefghijkmln".as_bytes().to_vec();   
+        "#
+        .as_bytes()
+        .to_vec();
+        let sig = "abcdefghijkmln".as_bytes().to_vec();
         let payload = Payload::new(sig, 0, 1, 1, tp_enum::TpEnum::Response as u8, value);
-        response([192, 168, 18, 6], &payload, 22);
+        response([127, 0, 0, 1], &payload, 22);
     }
 }

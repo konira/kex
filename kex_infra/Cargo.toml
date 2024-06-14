@@ -7,6 +7,5 @@ edition = "2021"
 
 [dependencies]
 kex_domain = { path = "../kex_domain" }
-etherparse = "0.15"
 pnet = "0.35"
 hex = "0.4.3"

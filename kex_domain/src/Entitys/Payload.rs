@@ -117,8 +117,8 @@ impl Payload {
         }
         let sig = chunks[0].sig.clone();
         let method = chunks[0].method;
-        let part = chunks[0].part;
-        let total = chunks[0].total;
+        let part = 1;
+        let total = 1;
         let tp = chunks[0].tp;
         Payload::new(sig, method, part, total, tp.into(), payload)
     }
