@@ -2,13 +2,15 @@ pub mod server;
 pub mod client;
 pub mod dto;
 use std::sync::Arc;
-use dto::ServerOptions::ServerOptions;
-use kex_domain::Entitys::{Envent::EventEmitter, Payload};
+
+
+use dto::{client_options, server_options::ServerOptions};
+use kex_domain::Entitys::Envent::EventEmitter;
 pub use hex;
 
 pub fn server(args: ServerOptions, event: Arc<EventEmitter>){
     server::server(args, event);
 }
-pub fn response(dst_ip: [u8; 4], data: Vec<u8>,chunk_size: usize){
-   server::response(dst_ip, &Payload::Payload::from_bytes(&data), chunk_size);
+pub fn client(options: client_options::ClientOptions){
+    client::client(options)  
 }

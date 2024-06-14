@@ -5,9 +5,9 @@ use pnet::packet::Packet;
 use pnet::transport::{self, TransportChannelType::Layer4};
 use std::net::Ipv4Addr;
 
-use crate::dto::ClientOptions::ClientOptions;
+use crate::dto::client_options::ClientOptions;
 
-pub fn request(options: ClientOptions) {
+pub fn client(options: ClientOptions) {
     let dst_ip = options.destination;
     let chunk_size = options.chunk_size;
     let payload = options.payload;
@@ -48,6 +48,8 @@ pub fn request(options: ClientOptions) {
 
 #[cfg(test)]
 mod tests {
+    use kex_domain::Enums::tp_enum::TpEnum;
+
     use super::*;
     #[test]
     fn test_request() {
@@ -55,9 +57,9 @@ mod tests {
         let sig: Vec<u8> = "abcdskluipuyyt".as_bytes().to_vec();
         let options = ClientOptions {
             destination: [192, 168, 18, 6],
-            chunk_size: 60,
-            payload: kex_domain::Entitys::Payload::Payload::new(sig, 0, 1, 1, 0, msg),
+            chunk_size: 60,            
+            payload: kex_domain::Entitys::Payload::Payload::new(sig, 0, 1, 1, TpEnum::Request as u8, msg),
         };
-        request(options);
+        client(options);
     }
 }

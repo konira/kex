@@ -1,2 +1,2 @@
-pub mod ClientOptions;
-pub mod ServerOptions;
+pub mod client_options;
+pub mod server_options;
