@@ -1,4 +1,4 @@
-use kex_domain::Entitys::Payload::Payload;
+use kex_domain::entitys::payload::Payload;
 
 pub struct ClientOptions{
     pub destination: [u8; 4],        

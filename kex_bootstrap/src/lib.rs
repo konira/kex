@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::os::raw::{c_char, c_uchar, c_int};
-pub use kex_domain::Entitys::Envent::EventEmitter;
-pub use kex_domain::Entitys::Payload::Payload;
+pub use kex_domain::entitys::envent::EventEmitter;
+pub use kex_domain::entitys::payload::Payload;
 pub use kex_infra::dto;
 pub use kex_infra::hex;
 use kex_infra::dto::server_options::ServerOptions;

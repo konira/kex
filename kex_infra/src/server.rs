@@ -1,7 +1,7 @@
 extern crate pnet;
-use kex_domain::Entitys::Envent::EventEmitter;
-use kex_domain::Entitys::Payload::Payload;
-use kex_domain::Enums::tp_enum::TpEnum;
+use kex_domain::entitys::envent::EventEmitter;
+use kex_domain::entitys::payload::Payload;
+use kex_domain::enums::tp_enum::TpEnum;
 use pnet::datalink::Channel::Ethernet;
 use pnet::datalink::{self, NetworkInterface};
 use pnet::packet::ethernet::EthernetPacket;
@@ -67,7 +67,7 @@ pub fn server(args: ServerOptions, event: Arc<EventEmitter>) {
                                 let mut data = data_clone.lock().unwrap();
                                 data.push(payload);
                                 
-                                if kex_domain::Entitys::Payload::Payload::is_complete(&mut data) {
+                                if kex_domain::entitys::payload::Payload::is_complete(&mut data) {
                                     let mut payload = vec![];
                                     for i in 0..data.len() {
                                         payload.extend_from_slice(&data[i].payload);

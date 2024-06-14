@@ -9,3 +9,4 @@ edition = "2021"
 kex_domain = { path = "../kex_domain" }
 pnet = "0.35"
 hex = "0.4.3"
+rand = "0.8.4"

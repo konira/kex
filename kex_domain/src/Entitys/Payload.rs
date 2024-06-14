@@ -1,6 +1,6 @@
 use std::sync::MutexGuard;
 
-use crate::Enums::tp_enum::TpEnum;
+use crate::enums::tp_enum::TpEnum;
 
 pub struct Payload {
     pub sig: Vec<u8>,

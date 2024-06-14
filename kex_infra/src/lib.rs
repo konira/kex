@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 
 use dto::{client_options, server_options::ServerOptions};
-use kex_domain::Entitys::Envent::EventEmitter;
+use kex_domain::entitys::envent::EventEmitter;
 pub use hex;
 
 pub fn server(args: ServerOptions, event: Arc<EventEmitter>){

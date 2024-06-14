@@ -16,7 +16,7 @@ pub fn client(options: ClientOptions) {
         pnet::packet::ip::IpNextHeaderProtocols::Icmp,
     ));
     let destination_addr = Ipv4Addr::new(dst_ip[0], dst_ip[1], dst_ip[2], dst_ip[3]).into();
-    if let Ok((mut tx, _)) = transport::transport_channel(4096, protocol) {
+    if let Ok((mut tx, _rx)) = transport::transport_channel(4096, protocol) {
         let chunks = payload.chunk(chunk_size);
         let mut sequenc = 1;
         for chunk in chunks {
@@ -29,17 +29,23 @@ pub fn client(options: ClientOptions) {
             packet.set_icmp_type(IcmpTypes::EchoRequest);
             packet.set_icmp_code(IcmpCode::new(0));
             packet.set_sequence_number(sequenc);
-            packet.set_identifier(1);
+            let identifier: u16 = rand::random();
+            packet.set_identifier(identifier);
             let icmp_packet: IcmpPacket = IcmpPacket::new(packet.packet()).unwrap();
             let checksum = icmp::checksum(&icmp_packet);
             packet.set_checksum(checksum);
             packet.set_payload(&chunk_bytes);
+                        
             let r = tx.send_to(packet, destination_addr);
-            if r.is_err() {
-                println!("Error on send_to: {:?}", r.err());
-            } else {
-                sequenc += 1;
-            }
+       
+            match r {
+                Ok(_resp) => {                    
+                    sequenc += 1;                                        
+                }
+                Err(e) => {
+                    println!("Error on send_to{:?}", e);
+                }                
+            }            
             let ten_millis = std::time::Duration::from_millis(20);
             std::thread::sleep(ten_millis);
         }
@@ -48,7 +54,7 @@ pub fn client(options: ClientOptions) {
 
 #[cfg(test)]
 mod tests {
-    use kex_domain::Enums::tp_enum::TpEnum;
+    use kex_domain::enums::tp_enum::TpEnum;
 
     use super::*;
     #[test]
@@ -58,7 +64,7 @@ mod tests {
         let options = ClientOptions {
             destination: [192, 168, 18, 6],
             chunk_size: 60,            
-            payload: kex_domain::Entitys::Payload::Payload::new(sig, 0, 1, 1, TpEnum::Request as u8, msg),
+            payload: kex_domain::entitys::payload::Payload::new(sig, 0, 1, 1, TpEnum::Request as u8, msg),
         };
         client(options);
     }
