@@ -1,5 +1,5 @@
 [workspace]
 resolver = "2"
 package.license = "MIT"
-members = [ "kex_app", "kex_bootstrap","kex_domain","kex_infra"]
+members = [ "exemples/payload_exe", "kex_app", "kex_bootstrap","kex_domain","kex_infra", "kex_tools"]
 default-members = ["kex_app"]
