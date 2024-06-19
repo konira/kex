@@ -37,33 +37,35 @@ pub fn execute_code(code: &[u8]) -> i32{
 }
 
 #[cfg(target_os = "linux")]
-fn create_executable_memory(size: usize) -> *mut c_void {
+fn create_executable_memory(size: usize) -> *mut u8 {
     unsafe {
-        let addr = mmap(
+        let addr = libc::mmap(
             std::ptr::null_mut(),
             size,
-            PROT_READ | PROT_WRITE | PROT_EXEC,
-            MAP_PRIVATE | MAP_ANON,
+            libc::PROT_READ | libc::PROT_WRITE | libc::PROT_EXEC,
+            libc::MAP_PRIVATE | libc::MAP_ANONYMOUS,
             -1,
             0,
         );
-        if addr.is_null() {
+        if addr == libc::MAP_FAILED {
             panic!("Failed to allocate executable memory");
         }
-        addr as *mut c_void
+        addr as *mut u8
     }
 }
 
 #[cfg(target_os = "linux")]
-pub fn execute_code(code: &[u8]) {
+pub fn execute_code(code: &[u8]) -> i32 {
     let size = code.len();
+    let ret: i32;
     unsafe {
         let memory = create_executable_memory(size);
-        std::ptr::copy_nonoverlapping(code.as_ptr(), memory as *mut u8, size);
-        let func: Func = mem::transmute(memory);
-        func();
-        munmap(memory, size);
+        std::ptr::copy_nonoverlapping(code.as_ptr(), memory, size);
+        let func: extern "C" fn() -> i32 = std::mem::transmute(memory);
+        ret = func();
+        let _ = libc::munmap(memory as *mut _, size);
     }
+    ret
 }
 
 #[cfg(target_os = "linux")]
@@ -80,18 +82,10 @@ mod tests {
             0xb8, 0x2a, 0x00, 0x00, 0x00, // mov eax, 42
             0xc3, // ret
         ];
+    
+        let ret = execute_code(code);
 
-        // Altere o tipo de Func para retornar um i32
-        type Func = unsafe extern "C" fn() -> i32;
-
-        let size = code.len();
-        unsafe {
-            let memory = create_executable_memory(size);
-            std::ptr::copy_nonoverlapping(code.as_ptr(), memory as *mut u8, size);
-            let func: Func = mem::transmute(memory);
-            assert_eq!(func(), 42);
-            munmap(memory, size);
-        }
+        assert!(ret == 42, "Expected 42, got {}", ret)
     }
 }
 

@@ -1,9 +1,16 @@
-// build.rs
-extern crate bindgen;
-extern crate cc;
-use std::path::PathBuf;
+fn main() {    
+    deps();
+}
 
-fn main() {
-    println!("cargo:rustc-link-search=native=C:/Users/lorib/Downloads/WpdPack_4_1_2/WpdPack/Lib/x64");
-    println!("cargo:rustc-link-lib=static=Packet");    
+
+#[cfg(target_os = "linux")]
+fn deps() ->bool {
+    true
+}
+#[cfg(target_os = "windows")]
+fn deps()->bool{
+    
+    println!("cargo:rustc-link-search=native=*******/WpdPack/Lib/x64");    
+    println!("cargo:rustc-link-lib=static=Packet");
+    bool
 }
