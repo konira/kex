@@ -1,11 +1,9 @@
-use std::mem;
-use std::os::raw::c_void;
 #[cfg(target_os = "windows")]
 use windows::Win32::System::Memory::{VirtualAlloc, VirtualFree, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE,MEM_RELEASE};
 #[cfg(target_os = "linux")]
-use libc::{mmap, munmap, PROT_READ, PROT_WRITE, PROT_EXEC, MAP_PRIVATE, MAP_ANON};
 
-type Func = unsafe extern "C" fn()->i32;
+
+
 
 #[cfg(target_os = "windows")]
 fn create_executable_memory(size: usize)  -> *mut u8{
