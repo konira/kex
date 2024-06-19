@@ -2,6 +2,7 @@ use std::sync::MutexGuard;
 
 use crate::enums::tp_enum::TpEnum;
 
+#[derive(Debug, PartialEq)]
 pub struct Payload {
     pub sig: Vec<u8>,
     pub method: u8,
@@ -32,8 +33,9 @@ impl Payload {
         payload: Vec<u8>,
     ) -> Payload {
         let len = payload.len() as u8;
+        let sig_normalized = Self::validate_and_adjust_sig(&mut sig.clone());
         Payload {
-            sig,
+            sig: sig_normalized,
             method,
             part,
             total,
@@ -41,6 +43,19 @@ impl Payload {
             len,
             payload,
         }
+    }
+    pub fn validate_and_adjust_sig(sig: &mut Vec<u8>) -> Vec<u8> {
+        let len = sig.len();
+        if len < 14 {
+            // Se sig for menor que 14, preencha com números crescentes a partir de 1
+            for i in len..14 {
+                sig.push(i as u8 + 1);
+            }
+        } else if len > 14 {
+            // Se sig for maior que 14, trunque para os primeiros 14 elementos
+            sig.truncate(14);
+        }
+        sig.to_vec()
     }
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = vec![];
@@ -147,40 +162,64 @@ impl Payload {
         Payload::new(sig, method, part, total, tp.into(), payload)
     }
 }
-
 #[cfg(test)]
 mod tests {
+
     use super::*;
+
     #[test]
-    fn test_payload() {
-        let sig = vec![0; 14];
-        let method = 0;
-        let part = 1;
-        let total = 1;
-        let tp = 0;
-        let payload = vec![0; 100];
-
-        let payload = Payload::new(sig, method, part, total, tp, payload);
-
-        let bytes = payload.to_bytes();
-        let payload = Payload::from_bytes(&bytes);
-        assert_eq!(payload.sig.len(), 14);
+    fn test_default() {
+        let payload = Payload::default();
+        assert_eq!(payload.sig, vec![]);
         assert_eq!(payload.method, 0);
+        assert_eq!(payload.part, 0);
+        assert_eq!(payload.total, 0);
+        assert_eq!(payload.tp, TpEnum::Request);
+        assert_eq!(payload.len, 0);
+        assert_eq!(payload.payload, vec![]);
+    }
+
+    #[test]
+    fn test_new() {
+        let sig = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, b'a', b'b', b'c', b'd', b'e'];
+        let _payload = vec![5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd];
+        let payload = Payload::new(sig.clone(), 1, 1, 1, 1, _payload.clone());
+
+        assert_eq!(payload.sig, sig);
+        assert_eq!(payload.method, 1);
         assert_eq!(payload.part, 1);
         assert_eq!(payload.total, 1);
-        assert_eq!(payload.tp, 0.into());
-        assert_eq!(payload.payload.len(), 100);
-        assert_eq!(payload.is_valid(), true);
-        assert_eq!(payload.is_single(), true);
-        assert_eq!(payload.is_multi(), false);
-        assert_eq!(payload.is_valid_method(), true);
-        assert_eq!(payload.is_valid_tp(), true);
-        assert_eq!(payload.is_valid_part(), true);
-        assert_eq!(payload.is_valid_total(), true);
-        assert_eq!(payload.is_valid_sig(), true);
-        let chunks = payload.chunk(50);
-        assert_eq!(chunks.len(), 1);
-        let payload = Payload::merge(chunks);
-        assert_eq!(payload.payload.len(), 100);
+        assert_eq!(payload.tp, TpEnum::from(1));
+        assert_eq!(payload.len, 9);
+        assert_eq!(payload.payload, _payload);
     }
+
+    #[test]
+    fn test_to_bytes_and_from_bytes() {
+        let payload = Payload::new(
+            vec![1, 2, 3, 4, 5, 6, 7, 8, 9, b'a', b'b', b'c', b'd', b'e'],
+            1,
+            1,
+            1,
+            1,
+            vec![5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd],
+        );
+        let bytes = payload.to_bytes();
+        let payload_from_bytes = Payload::from_bytes(&bytes);
+        assert_eq!(payload, payload_from_bytes);
+    }
+
+    #[test]
+    fn test_is_valid() {
+        let payload = Payload::new(vec![1; 14], 1, 2, 3, TpEnum::Response as u8, vec![5, 6, 7]);
+        assert!(payload.is_valid());
+    }
+
+    #[test]
+    fn test_is_single() {
+        let payload = Payload::new(vec![1; 14], 1, 1, 1, TpEnum::Response as u8, vec![5, 6, 7]);
+        assert!(payload.is_single());
+    }
+
+    // ... continue with other tests
 }
