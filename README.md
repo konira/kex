@@ -16,6 +16,9 @@ passando a "interface net" e uma assinatura de 14 bytes para que o pacote icmp s
 
 ![Pacote ICMP](./imgs/kex-usage.png)
 
+### Demo Client: 
+![Pacote ICMP](./imgs/kex-client-demo.png)
+
 ## Proximos passos
 - Criação de tutoriais
 
