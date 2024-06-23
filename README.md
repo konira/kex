@@ -19,6 +19,12 @@ passando a "interface net" e uma assinatura de 14 bytes para que o pacote icmp s
 ### Demo Client: 
 ![Pacote ICMP](./imgs/kex-client-demo.png)
 
+### Demo Server: 
+ - preparando exemplo
+ - 
+### Demo INJECTION DLL: 
+ - preparando exemplo
+ 
 ## Proximos passos
 - Criação de tutoriais
 
