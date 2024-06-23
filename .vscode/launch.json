@@ -25,6 +25,24 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug executable (Linux)'kex_app' server",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=kex_app",
+                    "--package=kex_app"
+                ],
+                "filter": {
+                    "name": "kex_app",
+                    "kind": "bin"
+                }
+            },
+            "args": ["server","-s=123456789aesdr", "-i=enp4s0", "-t=0"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug executable 'kex_app' client",
             "cargo": {
                 "args": [

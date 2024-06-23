@@ -28,16 +28,18 @@ pub fn exec(data: Vec<u8>, _addr: std::net::Ipv4Addr) {
     let _ = kex_infra::native_exec::execute_code(&data);
 }
 
-pub fn list_ifaces() {
-    kex_infra::server::iface_list()
-}
-
 pub fn server(args: ServerOptions) {
     let evet_emitter = Arc::new(EventEmitter::new());
     evet_emitter.on(Method::Exec as u8, Box::new(exec));
     evet_emitter.on(Method::Echo as u8, Box::new(echo));
     kex_infra::server(args, evet_emitter);
 }
+
+pub fn list_ifaces() {
+    kex_infra::server::iface_list()
+}
+
+
 
 pub fn client(options: dto::client_options::ClientOptions) {
     kex_infra::client(options)
